@@ -55,13 +55,28 @@ class HashTable {
 
     get = (key) => {
         const bucket = this.getBucket(key);
-        if (!bucket) return undefined;
+        if (!bucket) return;
         for (let i = 0; i < bucket.length; i++) {
             if (bucket[i][0] === key) return bucket[i][1];
         }
-
-        return undefined;
     };
+
+    remove = (key) => {
+        if (!this.getBucket(key)) return;
+        let bucket = this.getBucket(key);
+        for (let i = 0; i < bucket.length; i++) {
+            let node = bucket[i];
+            if (node[0] === key) {
+                bucket.splice(i, 1);
+                if (bucket.length < 1) bucket = undefined;
+                this.size--;
+
+                if (this.size / this.max <= .25) this.resize(Math.ceil(this.max / 2));
+                return node[1];
+            }
+
+        }
+    }
 
     resize = (newSize) => {
         const tempBuckets = this.buckets;
@@ -69,9 +84,10 @@ class HashTable {
         this.size = 0;
         this.buckets = [];
         tempBuckets.forEach((bucket) => {
-            if (bucket) {
-                const newIndex = this.hashFunction(bucket[0]);
-                this.buckets[newIndex] = [...bucket];
+            if (!!bucket) {
+                bucket.forEach(node => {
+                    this.set(node[0], node[1]);
+                })
             }
         });
     };
