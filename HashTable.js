@@ -76,3 +76,8 @@ class HashTable {
         });
     };
 }
+
+const ht = new HashTable();
+ht.set('a', 1);
+ht.set('b', 2);
+ht.set('c', 3);
