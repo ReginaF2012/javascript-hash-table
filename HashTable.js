@@ -57,9 +57,22 @@ class HashTable {
         const bucket = this.getBucket(key);
         if (!bucket) return undefined;
         for (let i = 0; i < bucket.length; i++) {
-            if(bucket[i][0] === key) return bucket[i][1];
+            if (bucket[i][0] === key) return bucket[i][1];
         }
 
         return undefined;
+    };
+
+    resize = (newSize) => {
+        const tempBuckets = this.buckets;
+        this.max = newSize;
+        this.size = 0;
+        this.buckets = [];
+        tempBuckets.forEach((bucket) => {
+            if (bucket) {
+                const newIndex = this.hashFunction(bucket[0]);
+                this.buckets[newIndex] = [...bucket];
+            }
+        });
     };
 }
