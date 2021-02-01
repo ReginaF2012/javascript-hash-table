@@ -24,4 +24,32 @@ class HashTable {
     getBucket = (key) => {
         return this.buckets[this.getIndex(key)];
     };
+
+    set = (key, value) => {
+        const index = this.getIndex(key);
+
+        if (!this.getBucket(key)) this.buckets[index] = [];
+
+        let bucket = this.getBucket(key);
+        let overwritten = false;
+
+        for (let i = 0; i < bucket.length; i++) {
+            let node = bucket[i];
+            if (node[0] === key) {
+                node[1] = value;
+                overwritten = true;
+            }
+        }
+
+        if (!overwritten) {
+            bucket.push([key, value]);
+            this.size++;
+        }
+
+        if (this.size / this.max >= 0.7) {
+            this.resize(this.max * 2);
+        }
+
+        return value;
+    };
 }
